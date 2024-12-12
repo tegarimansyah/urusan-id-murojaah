@@ -34,7 +34,7 @@ export default function Home() {
 
   const handleFinish = (finish: boolean) => {
     setIsFinished(finish)
-    finish === false && setSelectedSet(null)
+    if (finish === false) { setSelectedSet(null) }
   }
 
   return (

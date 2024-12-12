@@ -24,12 +24,6 @@ export default function RecordingInterface({ sentences, onFinish }: RecordingInt
 
   const { addRecording, getRecordings } = useRecordingStore()
 
-  useEffect(() => {
-    setTimeout(() => {
-      startRecording()
-    }, 500)
-  }, [currentIndex])
-
   const startRecording = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'inactive') {
       audioChunksRef.current = []
@@ -38,7 +32,7 @@ export default function RecordingInterface({ sentences, onFinish }: RecordingInt
         setTimeout(() => {
           setShowCountdown(false)
           setIsRecording(true)
-          mediaRecorderRef.current?.state === 'inactive' && mediaRecorderRef.current?.start()
+          if (mediaRecorderRef.current?.state === 'inactive') { mediaRecorderRef.current?.start() }
           setIsFirstRecording(false)
         }, 3000)
       } else {
@@ -75,6 +69,14 @@ export default function RecordingInterface({ sentences, onFinish }: RecordingInt
     streamRef.current?.getTracks().forEach(track => track.stop())
     onFinish(true)
   }, [onFinish, stopRecording])
+
+  useEffect(() => {
+    if (currentIndex > 0) {
+      setTimeout(() => {
+        startRecording()
+      }, 500)
+    }
+  }, [currentIndex, startRecording])
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true })
